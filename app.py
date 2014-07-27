@@ -8,7 +8,9 @@ import praw
 app = flask.Flask(__name__)
 app.secret_key = os.urandom(30)
 
-reddit = praw.Reddit('hearddit bot')
+reddit = praw.Reddit('playddit bot created by u/popcorn_bubblegum - '
+                     'creates youtube playlists from subreddit submissions-'
+                     'playddit.herokuapp.com')
 
 
 # home page
