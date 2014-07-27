@@ -12,6 +12,8 @@ reddit = praw.Reddit('playddit bot created by u/popcorn_bubblegum - '
                      'creates youtube playlists from subreddit submissions-'
                      'playddit.herokuapp.com')
 
+categories = ['hot', 'new', 'rising']
+
 
 # home page
 @app.route('/', methods=['get', 'post'])
@@ -22,7 +24,7 @@ def home():
         if category is None:
             return redirect('/play/%s' % subreddit)
         return redirect('/play/%s/%s' % (subreddit, category))
-    return render_template('index.html')
+    return render_template('index.html', categories=categories)
 
 
 # listen to a subreddit
@@ -30,18 +32,26 @@ def home():
 @app.route('/play/<subreddit>/<category>', methods=['get'])
 def listen(subreddit, category='hot'):
 
-    subr = reddit.get_subreddit(subreddit)
+    try:
+        subr = reddit.get_subreddit(subreddit)
+    except AttributeError:
+        flash("Sorry, I couldn't find /r/%s" % str(subreddit))
+        return redirect('/')
 
     if category is None:
         category = 'hot'
 
-    if category == 'hot':
-        submissions = [s for s in subr.get_hot(limit=50)]
-    elif category == 'new':
-        submissions = [s for s in subr.get_new(limit=50)]
-    elif category == 'controversial':
-        submissions = [s for s in subr.get_controversial(limit=50)]
-    else:
+    try:
+        if category == 'hot':
+            submissions = [s for s in subr.get_hot(limit=50)]
+        elif category == 'new':
+            submissions = [s for s in subr.get_new(limit=50)]
+        elif category == 'controversial':
+            submissions = [s for s in subr.get_controversial(limit=50)]
+        else:
+            submissions = []
+            flash("Sorry, I couldn't find anything at r/%s/%s" % (subreddit, category))
+    except praw.errors.RedirectException:
         submissions = []
         flash("Sorry, I couldn't find anything at r/%s/%s" % (subreddit, category))
 
@@ -60,7 +70,7 @@ def listen(subreddit, category='hot'):
     except IndexError:
         first = ''
 
-    return render_template('play.html', first=first, playlist=playlist)
+    return render_template('play.html', first=first, playlist=playlist, categories=categories, subreddit=subreddit)
 
 
 # main loop

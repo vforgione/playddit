@@ -1,10 +1,13 @@
 {% extends 'normal.html' %}
 
+{% block title %}/r/{{ subreddit }} | playddit{% endblock %}
+
 {% block navbar %}
   {% include 'navbar.html' %}
 {% endblock %}
 
 {% block content %}
+
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
@@ -16,7 +19,7 @@
     {% endif %}
   {% endwith %}
 
-  <div id="player" class="row center-block text-center glyphicon-align-center" style="margin-top:50px;"></div>
+  <div id="player" class="row center-block text-center glyphicon-align-center" style="margin-top:20px;"></div>
   <script>
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
@@ -28,6 +31,9 @@
         height: '600',
         width: '985',
         videoId: {{ first|safe }},
+        playerVars: {
+          'autoplay': 0
+        },
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange
@@ -36,7 +42,7 @@
     }
     function onPlayerReady(event) {
       player.loadPlaylist({{ playlist|safe }});
-      event.target.playVideo();
+      player.play();
     }
     var done = false;
     function onPlayerStateChange(event) {

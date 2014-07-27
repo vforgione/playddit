@@ -1,7 +1,7 @@
 {% extends 'jumbotron.html' %}
 
 {% block navbar %}
-  <style> .jumbotron{ margin-top:230px; box-shadow: 0 0 15px #000; } </style>
+  <style> .jumbotron{ box-shadow: 0 0 15px #000; } </style>
 {% endblock %}
 
 {% block content %}
@@ -18,8 +18,13 @@
     <div class="col-lg-6">
       <form action="." method="post">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-8">
             <input id="subreddit" name="subreddit" class="form-control" type="text" placeholder="/r/" autofocus />
+          </div>
+          <div class="col-md-2">
+            <select id="category" name="category" class="form-control">
+              {% for cat in categories %}<option value="{{ cat }}">{{ cat }}</option>{% endfor %}
+            </select>
           </div>
           <div class="col-md-2">
             <button class="btn btn-success">Create my Playlist!</button>
