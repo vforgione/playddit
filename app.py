@@ -19,7 +19,7 @@ categories = ['hot', 'new', 'rising']
 @app.route('/', methods=['get', 'post'])
 def home():
     if request.method == 'POST':
-        subreddit = request.form['subreddit']
+        subreddit = request.form['subreddit'].lower()
         category = request.form.get('category', None)
         if category is None:
             return redirect('/play/%s' % subreddit)

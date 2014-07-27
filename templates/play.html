@@ -31,9 +31,7 @@
         height: '600',
         width: '985',
         videoId: {{ first|safe }},
-        playerVars: {
-          'autoplay': 0
-        },
+        html5: true,
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange
@@ -42,7 +40,6 @@
     }
     function onPlayerReady(event) {
       player.loadPlaylist({{ playlist|safe }});
-      player.play();
     }
     var done = false;
     function onPlayerStateChange(event) {
